@@ -6,44 +6,137 @@
 //Date accessed:2025/11/10//
 
 import { useState } from "react";
-import { NavigationContainer } from "@react-navigation/native"; // Main navigation container
-import { createNativeStackNavigator } from "@react-navigation/native-stack"; // Stack navigator
-import { menuItem, Course, RootStackParamlist } from "./type"; // Types
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { menuItem, Course, RootStackParamlist } from "./type";
 import WelcomeScreen from "./screens/WelcomeScreen";
 import AddItemScreen from "./screens/AddItemScreen";
 import FilterScreen from "./screens/FilterScreen";
 import HomeScreen from "./screens/HomeScreen";
 
-// Create a typed stack navigator
 const Stack = createNativeStackNavigator<RootStackParamlist>();
 
-// Predefined menu items (3 starters, 3 mains, 3 desserts)
 const predefined: menuItem[] = [
   // STARTERS
-  { id: "1", itemName: "Truffle-infused Butternut Velouté", description: "...", category: "STARTER", price: 135, intensity: "Balanced", image: "...", ingredients: ["Butternut Squash","Black Truffle Oil","Parmesan Cheese","Greek yogurt"] },
-  { id: "2", itemName: "Pan-Seared Scallops with Lemon Beurre Blanc", description: "...", category: "STARTER", price: 165, intensity: "Balanced", image: "...", ingredients: ["Scallops","Butter","Lemon","Microgreens","Shallots"] },
-  { id: "3", itemName: "Beef Carpaccio with Truffle Shavings", description: "...", category: "STARTER", price: 155, intensity: "Mild", image: "...", ingredients: ["Beef Tenderloin","Truffle","Capers","Red Onion","Olive Oil"] },
+  {
+    id: "1",
+    itemName: "Truffle-infused Butternut Velouté",
+    description:
+      "A silky butternut squash velouté infused with black truffle oil, topped with a parmesan crisp and micro herbs.",
+    category: "STARTER",
+    price: 135,
+    intensity: "Balanced",
+    image:
+      "https://i.pinimg.com/736x/75/06/bf/7506bfc83b8d887bb61a01234faf043b.jpg",
+    ingredients: ["Butternut Squash", "Black Truffle Oil", "Parmesan Cheese", "Greek yogurt"],
+  },
+  {
+    id: "2",
+    itemName: "Pan-Seared Scallops with Lemon Beurre Blanc",
+    description:
+      "Succulent scallops seared until golden, served with a silky lemon beurre blanc and microgreens.",
+    category: "STARTER",
+    price: 165,
+    intensity: "Balanced",
+    image:
+      "https://cdn.shopify.com/s/files/1/0340/4057/8181/files/Scallops-HotSauce_wide_1920.jpg?v=1606767885",
+    ingredients: ["Scallops", "Butter", "Lemon", "Microgreens", "Shallots"],
+  },
+  {
+    id: "3",
+    itemName: "Beef Carpaccio with Truffle Shavings",
+    description:
+      "Thinly sliced raw beef with capers, red onion, and generous truffle shavings dressed in olive oil.",
+    category: "STARTER",
+    price: 155,
+    intensity: "Mild",
+    image:
+      "https://rivieraseafoodclub.com/cdn/shop/articles/Wagyu_Carpaccio_Recipe_with_Truffle_Oil.webp?v=1761339589",
+    ingredients: ["Beef Tenderloin", "Truffle", "Capers", "Red Onion", "Olive Oil"],
+  },
   // MAINS
-  { id: "4", itemName: "Pan-Seared Lamb Fillet with Red Wine", description: "...", category: "MAIN", price: 205, intensity: "Bold", image: "...", ingredients: ["Lamb Fillet","Red Wine","Mash Potatoes","Baby Carrots"] },
-  { id: "5", itemName: "Grilled Atlantic Salmon with Hollandaise", description: "...", category: "MAIN", price: 185, intensity: "Balanced", image: "...", ingredients: ["Atlantic Salmon","Hollandaise","Asparagus","Lemon","Dill"] },
-  { id: "6", itemName: "Filet Mignon with Mushroom Risotto", description: "...", category: "MAIN", price: 245, intensity: "Bold", image: "...", ingredients: ["Filet Mignon","Arborio Rice","Mushrooms","Truffle Oil","Parmesan"] },
+  {
+    id: "4",
+    itemName: "Pan-Seared Lamb Fillet with Red Wine",
+    description:
+      "Tender lamb fillet seared to perfection, served on truffle mash and roasted veggies.",
+    category: "MAIN",
+    price: 205,
+    intensity: "Bold",
+    image:
+      "https://i.pinimg.com/736x/7d/d5/92/7dd5929d174fb21896489115a6079cef.jpg",
+    ingredients: ["Lamb Fillet", "Red Wine", "Mash Potatoes", "Baby Carrots"],
+  },
+  {
+    id: "5",
+    itemName: "Grilled Atlantic Salmon with Hollandaise",
+    description:
+      "Fresh Atlantic salmon fillet grilled to perfection, topped with a creamy hollandaise sauce and asparagus.",
+    category: "MAIN",
+    price: 185,
+    intensity: "Balanced",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSdS3DV4MIy6gL7l0LzPCPIcV9pIPuNI6s3Cg&s",
+    ingredients: ["Atlantic Salmon", "Hollandaise", "Asparagus", "Lemon", "Dill"],
+  },
+  {
+    id: "6",
+    itemName: "Filet Mignon with Mushroom Risotto",
+    description:
+      "Premium filet mignon, rare to medium, served with creamy mushroom risotto and truffle oil drizzle.",
+    category: "MAIN",
+    price: 245,
+    intensity: "Bold",
+    image:
+      "https://images.squarespace-cdn.com/content/v1/5be71f2a7c93275d254fa558/1557719488639-2ODK4H6SW2BR4IJ882UH/fullsizeoutput_5465.jpg?format=2500w",
+    ingredients: ["Filet Mignon", "Arborio Rice", "Mushrooms", "Truffle Oil", "Parmesan"],
+  },
   // DESSERTS
-  { id: "7", itemName: "Crème Brûlée", description: "...", category: "DESSERT", price: 85, intensity: "Mild", image: "...", ingredients: ["Heavy Cream","Egg Yolks","Vanilla Bean","Sugar"] },
-  { id: "8", itemName: "Chocolate Lava Cake with Vanilla Ice Cream", description: "...", category: "DESSERT", price: 95, intensity: "Strong", image: "...", ingredients: ["Dark Chocolate","Butter","Eggs","Vanilla Ice Cream","Mint"] },
-  { id: "9", itemName: "Lemon Posset with Shortbread", description: "...", category: "DESSERT", price: 75, intensity: "Mild", image: "...", ingredients: ["Heavy Cream","Lemon Juice","Sugar","Butter","Flour"] },
+  {
+    id: "7",
+    itemName: "Crème Brûlée",
+    description:
+      "Silky smooth vanilla custard topped with caramelized sugar, served chilled with fresh berries.",
+    category: "DESSERT",
+    price: 85,
+    intensity: "Mild",
+    image:
+      "https://i.pinimg.com/736x/26/50/94/2650949dbac59547bc807f9483273369.jpg",
+    ingredients: ["Heavy Cream", "Egg Yolks", "Vanilla Bean", "Sugar"],
+  },
+  {
+    id: "8",
+    itemName: "Chocolate Lava Cake with Vanilla Ice Cream",
+    description:
+      "Warm chocolate cake with a molten center, served with premium vanilla ice cream and fresh mint.",
+    category: "DESSERT",
+    price: 95,
+    intensity: "Strong",
+    image:
+      "https://www.melskitchencafe.com/wp-content/uploads/2023/01/updated-lava-cakes7.jpg",
+    ingredients: ["Dark Chocolate", "Butter", "Eggs", "Vanilla Ice Cream", "Mint"],
+  },
+  {
+    id: "9",
+    itemName: "Lemon Posset with Shortbread",
+    description:
+      "Traditional lemon posset with a sweet and tangy flavor, served with buttery shortbread biscuits.",
+    category: "DESSERT",
+    price: 75,
+    intensity: "Mild",
+    image:
+      "https://media-cdn2.greatbritishchefs.com/media/zdjd13yw/img25748.whqc_768x512q90fpt427fpl534.jpg",
+    ingredients: ["Heavy Cream", "Lemon Juice", "Sugar", "Butter", "Flour"],
+  },
 ];
 
 export default function App() {
-  // App state: current list of menu items
   const [items, setItems] = useState<menuItem[]>(predefined);
 
-  // Add a new menu item
   const addItem = (item: menuItem) => setItems((prev) => [...prev, item]);
+  const removeItem = (id: string) =>
+    setItems((prev) => prev.filter((i) => i.id !== id));
 
-  // Remove an item by id
-  const removeItem = (id: string) => setItems((prev) => prev.filter((i) => i.id !== id));
-
-  // Calculate average price for a given category
   const avg = (course: Course) => {
     const list = items.filter((i) => i.category === course);
     if (!list.length) return "0.00";
@@ -55,26 +148,24 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{
-          headerStyle: { backgroundColor: "#FFFFFF" }, // White header background
-          headerTintColor: "#D4AF37", // Golden header text
-          headerTitleStyle: { fontWeight: "800" }, // Bold title
+          headerStyle: { backgroundColor: "#FFFFFF" },
+          headerTintColor: "#D4AF37",
+          headerTitleStyle: { fontWeight: "800" },
         }}
       >
-        {/* Welcome screen (no header) */}
         <Stack.Screen
           name="WelcomeScreen"
           component={WelcomeScreen}
           options={{ headerShown: false }}
         />
 
-        {/* Home screen */}
         <Stack.Screen name="HomeScreen" options={{ title: "Chef Christoffel's Kitchen" }}>
           {(props) => (
             <HomeScreen
               {...props}
-              items={items} // Pass current menu items
-              removeItem={removeItem} // Pass remove function
-              averages={{ // Pass average prices for each category
+              items={items}
+              removeItem={removeItem}
+              averages={{
                 STARTER: avg("STARTER"),
                 MAIN: avg("MAIN"),
                 DESSERT: avg("DESSERT"),
@@ -83,12 +174,10 @@ export default function App() {
           )}
         </Stack.Screen>
 
-        {/* Add item screen */}
         <Stack.Screen name="AddItemScreen" options={{ title: "Add New Item" }}>
           {(props) => <AddItemScreen {...props} addItem={addItem} />}
         </Stack.Screen>
 
-        {/* Filter screen */}
         <Stack.Screen name="Filter" options={{ title: "Filter Menu" }}>
           {(props) => <FilterScreen {...props} items={items} />}
         </Stack.Screen>
