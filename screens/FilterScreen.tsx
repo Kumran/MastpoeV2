@@ -7,16 +7,17 @@
 
 import React, { useMemo, useState } from "react";
 import { FlatList, Image, SafeAreaView, StyleSheet, Text, View } from "react-native";
-import { Picker } from "@react-native-picker/picker";
-import { menuItem, Course, RootStackParamlist } from "../type";
+import { Picker } from "@react-native-picker/picker"; // Dropdown picker
+import { menuItem, Course, RootStackParamlist } from "../type"; // Types
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
+// Props type for navigation
 type Props = NativeStackScreenProps<RootStackParamlist, "Filter">;
 
-// Allow `items` to be passed either via navigation params (route.params?.items)
-// or directly as a prop when the screen is rendered as a child in the navigator.
+// Allow `items` to be passed either via route params or directly as a prop
 type ScreenProps = Props & { items?: menuItem[] };
 
+// Color palette
 const c = {
   bg: "#FFFFFF",
   card: "#F5F5F5",
@@ -27,12 +28,14 @@ const c = {
 };
 
 export default function FilterScreen({ route, items }: ScreenProps) {
-  // prefer items passed directly as a prop, otherwise fall back to route params
+  // Prefer items passed as prop, fallback to route params, default to empty array
   const itemsList: menuItem[] = items ?? route.params?.items ?? [];
 
+  // State for selected category (STARTER, MAIN, DESSERT)
   const [selected, setSelected] = useState<Course>("STARTER");
 
-  // ✅ Filter the items
+  // ✅ Filter items based on selected category
+  // useMemo avoids recalculating on every render unless dependencies change
   const filteredItems = useMemo(
     () => itemsList.filter((i) => i.category === selected),
     [itemsList, selected]
@@ -40,12 +43,12 @@ export default function FilterScreen({ route, items }: ScreenProps) {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* ✅ PICKER */}
+      {/* ✅ CATEGORY PICKER */}
       <View style={styles.pickerWrap}>
         <View style={styles.pickerBox}>
           <Picker
-            selectedValue={selected}
-            onValueChange={(v) => setSelected(v as Course)}
+            selectedValue={selected} // current selection
+            onValueChange={(v) => setSelected(v as Course)} // update state
             mode="dropdown"
             dropdownIconColor="#D4AF37"
             style={styles.picker}
@@ -54,25 +57,27 @@ export default function FilterScreen({ route, items }: ScreenProps) {
             <Picker.Item label="STARTER" value="STARTER" color="#000000" />
             <Picker.Item label="MAIN" value="MAIN" color="#000000" />
             <Picker.Item label="DESSERT" value="DESSERT" color="#000000" />
-
           </Picker>
         </View>
       </View>
 
-      {/* ✅ HEADING */}
+      {/* ✅ HEADING showing selected category and item count */}
       <Text style={styles.heading}>
         {selected}s ({filteredItems.length})
       </Text>
 
-      {/* ✅ LIST */}
+      {/* ✅ FLATLIST of filtered items */}
       <FlatList
-  data={filteredItems}
-        keyExtractor={(i) => i.id}
+        data={filteredItems} // only items for the selected category
+        keyExtractor={(i) => i.id} // unique key for each item
         contentContainerStyle={{ paddingBottom: 20 }}
         renderItem={({ item }) => (
           <View style={styles.card}>
+            {/* Item image */}
             <Image source={{ uri: item.image }} style={styles.image} />
+
             <View style={styles.body}>
+              {/* Item name */}
               <Text style={styles.title}>{item.itemName}</Text>
 
               {/* ✅ INGREDIENT TAGS */}
@@ -91,6 +96,7 @@ export default function FilterScreen({ route, items }: ScreenProps) {
   );
 }
 
+// Styles for the screen
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: c.bg, padding: 16 },
 
@@ -121,7 +127,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     overflow: "hidden",
     marginVertical: 8,
-    elevation: 3,
+    elevation: 3, // shadow for Android
   },
 
   image: { width: "100%", height: 170 },
